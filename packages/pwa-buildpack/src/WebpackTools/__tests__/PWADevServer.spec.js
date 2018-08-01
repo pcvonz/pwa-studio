@@ -148,9 +148,7 @@ test('.getUniqueSubdomain() logs a warning if it cannot determine a name', async
         expect.stringMatching('Could not autodetect'),
         expect.any(Error)
     );
-    expect(console.warn.mock.calls[0][1].message).toMatch(
-        'undefined "name" field'
-    );
+    expect(console.warn.mock.calls[0][1].message).toMatchSnapshot();
 
     // and even if package cannot be found:
     simulate.noPackageFound();

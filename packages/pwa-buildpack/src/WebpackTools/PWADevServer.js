@@ -82,16 +82,16 @@ const PWADevServer = {
             try {
                 // eslint-disable-next-line node/no-missing-require
                 const pkg = require(pkgLoc);
-                if (!pkg.name) {
+                if (!pkg.name || typeof pkg.name !== 'string') {
                     throw new Error(
-                        `package.json has ${pkg.name} "name" field!`
+                        `package.json does not have a usable "name" field!`
                     );
                 }
                 name = pkg.name;
             } catch (e) {
                 console.warn(
                     debug.errorMsg(
-                        `getUniqueSubdomain(): Using default "${name}" prefix. Could not autodetect theme name from package.json`
+                        `getUniqueSubdomain(): Using default "${name}" prefix. Could not autodetect theme name from package.json: `
                     ),
                     e
                 );
