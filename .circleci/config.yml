@@ -63,6 +63,17 @@ common_settings:
     name: Install shared devDependencies
     command: npm install --ignore-scripts
 
+  test_suites: &test_suites
+    name: Test Suites
+    command: 'npm run test:ci'
+
+  test_result_path: &test_result_path
+    path: "test-results"
+
+
+  coveralls: &coveralls
+    name: Coveralls Coverage Analysis
+    command: npm run coveralls
 jobs:
   update_lockfile:
     docker: *docker_setup
@@ -82,9 +93,9 @@ jobs:
       - run:
           name: Run Lerna Bootstrap in CI mode
           command: npm run bootstrap
-      - run:
-          name: Coveralls
-          command: npm test && npm run coveralls
+      - run: *test_suites
+      - run: *coveralls
+      - store_test_results: *test_result_path
   build:
     docker: *docker_setup
     steps:
@@ -103,6 +114,12 @@ jobs:
       - run:
           name: Greenkeeper Lockfile upload on Greenkeeper branches
           command: greenkeeper-lockfile-upload
+      - run: *test_suites
+      - run: *coveralls
       - run:
           name: DangerCI
           command: npm run danger
+
+      - store_test_results: *test_result_path
+
+
