@@ -70,7 +70,6 @@ common_settings:
   test_result_path: &test_result_path
     path: "test-results"
 
-
   coveralls: &coveralls
     name: Coveralls Coverage Analysis
     command: npm run coveralls
@@ -96,6 +95,7 @@ jobs:
       - run: *test_suites
       - run: *coveralls
       - store_test_results: *test_result_path
+      - store_artifacts: *test_result_path
   build:
     docker: *docker_setup
     steps:
@@ -117,9 +117,14 @@ jobs:
       - run: *test_suites
       - run: *coveralls
       - run:
+          name: Patch CircleCI environment to help detect pull requests
+          command: node .circleci/patch_circleci_environment.js >> $BASH_ENV
+      - run:
           name: DangerCI
           command: npm run danger
+          when: always
 
       - store_test_results: *test_result_path
+      - store_artifacts: *test_result_path
 
 
