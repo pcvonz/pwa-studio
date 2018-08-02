@@ -64,15 +64,10 @@ common_settings:
     command: npm install --ignore-scripts
 
   test_suites: &test_suites
-    name: Test Suites
-    command: 'npm run test:ci'
 
   test_result_path: &test_result_path
     path: "test-results"
 
-  coveralls: &coveralls
-    name: Coveralls Coverage Analysis
-    command: npm run coveralls
 jobs:
   update_lockfile:
     docker: *docker_setup
@@ -92,8 +87,12 @@ jobs:
       - run:
           name: Run Lerna Bootstrap in CI mode
           command: npm run bootstrap
-      - run: *test_suites
-      - run: *coveralls
+      - run:
+          name: Test Suites
+          command: 'npm run test:ci'
+      - run:
+          name: Coveralls Coverage Analysis
+          command: npm run coveralls
       - store_test_results: *test_result_path
       - store_artifacts: *test_result_path
   build:
@@ -114,15 +113,16 @@ jobs:
       - run:
           name: Greenkeeper Lockfile upload on Greenkeeper branches
           command: greenkeeper-lockfile-upload
-      - run: *test_suites
-      - run: *coveralls
+      - run:
+          name: Test Suites and Coverage
+          # Test failures should not stop Danger, so hide the exit code.
+          command: 'npm run test:ci && npm run coveralls || true'
       - run:
           name: Patch CircleCI environment to help detect pull requests
           command: node .circleci/patch_circleci_environment.js >> $BASH_ENV
       - run:
           name: DangerCI
           command: npm run danger
-          when: always
 
       - store_test_results: *test_result_path
       - store_artifacts: *test_result_path

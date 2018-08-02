@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const execa = require('execa');
 const mkdirp = require('mkdirp');
-const builder = require('junit-report-builder');
+const xml = require('xml');
 const { fail, warn, markdown, danger } = require('danger');
 const prettierVersion = require('prettier/package.json').version;
 const eslintJUnitReporter = require('eslint/lib/formatters/junit');
@@ -16,42 +16,89 @@ const reportFile = name => {
     return path.join(subdir, 'results.xml');
 };
 const fence = '```';
-const nsPerSec = 1e9;
 const codeFence = str => `${fence}\n${str.trim()}\n${fence}`;
 
+const nsPerSec = 1e9;
+const formatTime = ([seconds, nanoseconds]) =>
+    (seconds + nanoseconds / nsPerSec).toFixed(3);
 const timer = () => {
     const startTime = process.hrtime();
-    return () => {
-        const [seconds, nanoseconds] = process.hrtime(startTime);
-        return (seconds + nanoseconds / nsPerSec).toFixed(1);
+    let lapTime = startTime;
+    return {
+        lap: () => formatTime((lapTime = process.hrtime(lapTime))),
+        stop: () => formatTime(process.hrtime(startTime))
     };
 };
 
 function jUnitSuite(title) {
-    const seconds = timer();
-    const suite = builder
-        .testSuite()
-        .name(title)
-        .timestamp(new Date());
+    const stopwatch = timer();
+    let failureCount = 0;
+    let errorCount = 0;
+    const cases = [];
+    function testCase(name, type, message, trace) {
+        const tcAttrs = {
+            _attr: { classname: '', name, time: stopwatch.lap() }
+        };
+        return {
+            testcase: type
+                ? [
+                      tcAttrs,
+                      {
+                          [type]: trace
+                              ? { _attr: { message }, _cdata: trace }
+                              : {
+                                    _attr: { message }
+                                }
+                      }
+                  ]
+                : [tcAttrs]
+        };
+    }
     return {
         pass(name) {
-            suite.testCase(name);
+            cases.push(testCase(name));
         },
         fail(name, message, trace) {
-            const testCase = suite.testCase(name).failure(message);
-            if (trace) {
-                testCase.stackTrace(trace);
-            }
+            cases.push(testCase(name, 'failure', message, trace));
+            failureCount++;
         },
         error(name, message, trace) {
-            const testCase = suite.testCase(name).error(message);
-            if (trace) {
-                testCase.standardError(trace);
-            }
+            cases.push(testCase(name, 'error', message, trace));
+            errorCount++;
         },
         save(filename) {
-            suite.time(seconds());
-            builder.writeTo(reportFile('prettier'));
+            const time = stopwatch.stop();
+            fs.writeFileSync(
+                filename,
+                xml({
+                    testsuites: [
+                        {
+                            _attr: {
+                                tests: cases.length,
+                                failures: failureCount,
+                                time
+                            }
+                        },
+                        {
+                            testsuite: [
+                                {
+                                    _attr: {
+                                        name: title,
+                                        errors: errorCount,
+                                        failures: failureCount,
+                                        skipped: 0,
+                                        timestamp: new Date().toISOString(),
+                                        time,
+                                        tests: cases.length
+                                    }
+                                },
+                                ...cases
+                            ]
+                        }
+                    ]
+                }),
+                'utf8'
+            );
         }
     };
 }
@@ -125,7 +172,7 @@ const tasks = [
                 junit.pass(filename);
             }
         });
-        junit.save('prettier-junit.xml');
+        junit.save(reportFile('prettier'));
         if (failedFiles.length > 0) {
             fail(
                 'The following file(s) were not ' +
@@ -136,7 +183,7 @@ const tasks = [
     },
 
     function eslintCheck() {
-        const seconds = timer();
+        const stopwatch = timer();
         let stdout;
         try {
             ({ stdout } = execa.sync('npm', [
@@ -155,7 +202,7 @@ const tasks = [
         const eslintXml = eslintJUnitReporter(results);
         const eslintXmlWithTime = eslintXml.replace(
             /testsuite package="org\.eslint" time="0"/m,
-            `testsuite package="org.eslint" time="${seconds()}"`
+            `testsuite package="org.eslint" time="${stopwatch.stop()}"`
         );
         fs.writeFileSync(reportFile('eslint'), eslintXmlWithTime, 'utf8');
 
