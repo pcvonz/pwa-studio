@@ -1,4 +1,5 @@
 const path = require('path');
+
 const debug = require('debug');
 const root = path.resolve(__dirname, '../');
 const pkg = require(path.resolve(root, '../package.json'));

@@ -8,7 +8,7 @@ configure({ adapter: new Adapter() });
 
 if (!global.Intl.NumberFormat.prototype.formatToParts) {
     global.Intl = IntlPolyfill;
-    require('intl/locale-data/jsonp/en.js');
+    // require('intl/locale-data/jsonp/en.js');
 }
 
 test('Renders a USD price', () => {

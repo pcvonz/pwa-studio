@@ -3,6 +3,8 @@ import { Provider as ReduxProvider } from 'react-redux';
 import createStore from '../store';
 import MagentoRouter from '../Router';
 
+var loaf;
+
 /**
  *
  * @param {string} apiBase Absolute URL pointing to the GraphQL endpoint
