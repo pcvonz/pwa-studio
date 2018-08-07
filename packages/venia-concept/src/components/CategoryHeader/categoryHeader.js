@@ -1,4 +1,4 @@
-import { createElement, Component, Fragment } from 'react';
+import { createElement, Component } from 'react';
 import defaultClasses from './categoryHeader.css';
 export default class CategoryHeader extends Component {
     static defaultProps = {
@@ -17,12 +17,12 @@ export default class CategoryHeader extends Component {
         ) : null;
     }
 
-
     render() {
+        const { classes } = this.props;
         return (
-          <Fragment>
+          <div className={classes.root}>
             {this.header}
-          </Fragment>
+          </div>
         );
     }
 }
