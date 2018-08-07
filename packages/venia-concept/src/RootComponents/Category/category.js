@@ -1,12 +1,11 @@
 import { Component, createElement } from 'react';
 import { string, number, shape } from 'prop-types';
-import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import classify from 'src/classify';
 import Gallery from 'src/components/Gallery';
 import Page from 'src/components/Page';
 import defaultClasses from './category.css';
-import Loader from '../Loader';
+import wrapQuery from 'src/components/WrapQuery';
 
 const categoryQuery = gql`
     query category($id: Int!) {
@@ -50,40 +49,31 @@ class Category extends Component {
     };
 
     render() {
-        const { id, classes } = this.props;
+        const { data, classes } = this.props;
 
         return (
-            <Page>
-                <Query query={categoryQuery} variables={{ id }}>
-                    {({ loading, error, data }) => {
-                        if (error) return <div>Data Fetch Error</div>;
-                        if (loading) return <Loader />;
-
-                        return (
-                            <article className={classes.root}>
-                                <h1 className={classes.title}>
-                                    {/* TODO: Switch to RichContent component from Peregrine when merged */}
-                                    <span
-                                        dangerouslySetInnerHTML={{
-                                            __html: data.category.description
-                                        }}
-                                    />
-                                </h1>
-                                <section className={classes.gallery}>
-                                    <Gallery
-                                        data={data.category.products.items}
-                                        title={data.category.description}
-                                    />
-                                </section>
-                            </article>
-                        );
-                    }}
-                </Query>
-            </Page>
+          <Page>
+            <article className={classes.root}>
+              <h1 className={classes.title}>
+                {/* TODO: Switch to RichContent component from Peregrine when merged */}
+          <span
+            dangerouslySetInnerHTML={{
+              __html: data.category.description
+            }}
+          />
+        </h1>
+          <section className={classes.gallery}>
+            <Gallery
+              data={data.category.products.items}
+              title={data.category.description}
+            />
+          </section>
+          </article>
+          </Page>
         );
     }
 }
 
 
 
-export default classify(defaultClasses)(Category);
+export default classify(defaultClasses)(wrapQuery(Category, categoryQuery));
