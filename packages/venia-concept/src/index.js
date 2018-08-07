@@ -4,7 +4,7 @@ import bootstrap from '@magento/peregrine';
 import { MagentoRouter } from '@magento/peregrine';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
-import Loader from './RootComponents/Loader';
+import Loader from 'src/components/Loader';
 
 import reducer from 'src/reducers/app';
 import './index.css';
