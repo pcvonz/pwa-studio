@@ -10,38 +10,38 @@ import getUrlKey from 'src/util/getUrlKey';
 
 class Product extends Component {
     static propTypes = {
-      data: shape({
-        productDetail: shape({
-          total_count: number,
-          items: arrayOf(
-            shape({
-              id: number,
-              sku: string.isRequired,
-              price: shape({
-                regularPrice: shape({
-                  amount: shape({
-                    currency: string.isRequired,
-                    value: number.isRequired
-                  })
-                }).isRequired
-              }).isRequired,
-              image: string,
-              image_label: string,
-              media_gallery_entries: arrayOf(
-                shape({
-                  label: string,
-                  position: number.isRequired,
-                  disabled: bool,
-                  file: string.isRequired
-                })
-              ),
-              description: string,
-              short_description: string,
-              canonical_url: string
-            })
-          ).isRequired
-        }).isRequired
-      })
+        data: shape({
+            productDetail: shape({
+                total_count: number,
+                items: arrayOf(
+                    shape({
+                        id: number,
+                        sku: string.isRequired,
+                        price: shape({
+                            regularPrice: shape({
+                                amount: shape({
+                                    currency: string.isRequired,
+                                    value: number.isRequired
+                                })
+                            }).isRequired
+                        }).isRequired,
+                        image: string,
+                        image_label: string,
+                        media_gallery_entries: arrayOf(
+                            shape({
+                                label: string,
+                                position: number.isRequired,
+                                disabled: bool,
+                                file: string.isRequired
+                            })
+                        ),
+                        description: string,
+                        short_description: string,
+                        canonical_url: string
+                    })
+                ).isRequired
+            }).isRequired
+        })
     };
 
     addToCart = async (item, quantity) => {
@@ -52,10 +52,10 @@ class Product extends Component {
     render() {
         return (
             <Page>
-              <ProductFullDetail
-                  addToCart={this.props.addItemToCart}
-                  queryArguments={{ urlKey: getUrlKey }}
-              />
+                <ProductFullDetail
+                    addToCart={this.props.addItemToCart}
+                    queryArguments={{ urlKey: getUrlKey }}
+                />
             </Page>
         );
     }

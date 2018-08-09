@@ -24,9 +24,9 @@ const categoryUrlSuffix = '.html';
 
 class CategoryList extends Component {
     static propTypes = {
-      queryArgument: shape({
-        id: number
-      }),
+        queryArgument: shape({
+            id: number
+        }),
         title: string,
         classes: shape({
             root: string,
@@ -41,40 +41,38 @@ class CategoryList extends Component {
     };
 
     render() {
-      const { classes, data } = this.props;
+        const { classes, data } = this.props;
 
-      if (data.category.children == '')
-        return <div>Here are not any child categories</div>;
+        if (data.category.children == '')
+            return <div>Here are not any child categories</div>;
 
-      return (
-        <div className={classes.content}>
-          {data.category.children.map((item, index) => (
-            <a
-              className={classes.item}
-              href={`/${
-            item.url_key
-          }${categoryUrlSuffix}`}
-          key={index}
-        >
-          <span className={classes.imageWrapper}>
-            {item.image && (
-              <img
-                className={classes.image}
-                src={`/pub/media/catalog/category/${
-                  item.image
-                                                    }`}
-                                                    alt={item.name}
-                                                  />
-            )}
-          </span>
-          <span className={classes.name}>
-            {item.name}
-          </span>
-        </a>
-          ))}
-        </div>
-      );
+        return (
+            <div className={classes.content}>
+                {data.category.children.map((item, index) => (
+                    <a
+                        className={classes.item}
+                        href={`/${item.url_key}${categoryUrlSuffix}`}
+                        key={index}
+                    >
+                        <span className={classes.imageWrapper}>
+                            {item.image && (
+                                <img
+                                    className={classes.image}
+                                    src={`/pub/media/catalog/category/${
+                                        item.image
+                                    }`}
+                                    alt={item.name}
+                                />
+                            )}
+                        </span>
+                        <span className={classes.name}>{item.name}</span>
+                    </a>
+                ))}
+            </div>
+        );
     }
 }
 
-export default classify(defaultClasses)(wrapQuery(CategoryList, categoryListQuery));
+export default classify(defaultClasses)(
+    wrapQuery(CategoryList, categoryListQuery)
+);

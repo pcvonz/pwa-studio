@@ -19,9 +19,15 @@ class Category extends Component {
         const { id, data, classes } = this.props;
 
         return (
-          <Page>
-            <CategoryPageContent queryArguments={{id: id}} data={data} classes={classes}> </CategoryPageContent>
-          </Page>
+            <Page>
+                <CategoryPageContent
+                    queryArguments={{ id: id }}
+                    data={data}
+                    classes={classes}
+                >
+                    {' '}
+                </CategoryPageContent>
+            </Page>
         );
     }
 }

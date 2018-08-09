@@ -20,10 +20,8 @@ export default function bootstrap({ customRouter }) {
 
     const store = createStore();
 
-    const Provider = () => (
-        React.createElement(ReduxProvider, {store: store}, customRouter)
-    );
+    const Provider = () =>
+        React.createElement(ReduxProvider, { store: store }, customRouter);
 
     return { store, Provider };
 }
-

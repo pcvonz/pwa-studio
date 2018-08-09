@@ -2,7 +2,7 @@ import { createElement, Component } from 'react';
 import defaultClasses from './categoryHeader.css';
 export default class CategoryHeader extends Component {
     static defaultProps = {
-      classes: defaultClasses
+        classes: defaultClasses
     };
 
     get header() {
@@ -19,11 +19,6 @@ export default class CategoryHeader extends Component {
 
     render() {
         const { classes } = this.props;
-        return (
-          <div className={classes.root}>
-            {this.header}
-          </div>
-        );
+        return <div className={classes.root}>{this.header}</div>;
     }
 }
-

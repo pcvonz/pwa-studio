@@ -44,57 +44,56 @@ const productDetailQuery = gql`
     }
 `;
 
-
 class ProductFullDetail extends Component {
     static propTypes = {
-      queryArgument: shape({
-        urlKey: string
-      }),
-      classes: shape({
-        actions: string,
-        cartActions: string,
-        description: string,
-        descriptionTitle: string,
-        details: string,
-        detailsTitle: string,
-        imageCarousel: string,
-        productName: string,
-        productPrice: string,
-        quantity: string,
-        quantityTitle: string,
-        root: string,
-        title: string
-      }),
-      data: shape({
-        productDetail: shape({
-          items: arrayOf(
-            shape({
-              product: shape({
-                id: number,
-                sku: string.isRequired,
-                price: shape({
-                  regularPrice: shape({
-                    amount: shape({
-                      currency: string.isRequired,
-                      value: number.isRequired
+        queryArgument: shape({
+            urlKey: string
+        }),
+        classes: shape({
+            actions: string,
+            cartActions: string,
+            description: string,
+            descriptionTitle: string,
+            details: string,
+            detailsTitle: string,
+            imageCarousel: string,
+            productName: string,
+            productPrice: string,
+            quantity: string,
+            quantityTitle: string,
+            root: string,
+            title: string
+        }),
+        data: shape({
+            productDetail: shape({
+                items: arrayOf(
+                    shape({
+                        product: shape({
+                            id: number,
+                            sku: string.isRequired,
+                            price: shape({
+                                regularPrice: shape({
+                                    amount: shape({
+                                        currency: string.isRequired,
+                                        value: number.isRequired
+                                    })
+                                }).isRequired
+                            }).isRequired,
+                            media_gallery_entries: arrayOf(
+                                shape({
+                                    label: string,
+                                    position: number,
+                                    disabled: bool,
+                                    file: string.isRequired
+                                })
+                            ),
+                            description: string
+                        }).isRequired,
+                        addToCart: func.isRequired
                     })
-                  }).isRequired
-                }).isRequired,
-                media_gallery_entries: arrayOf(
-                  shape({
-                    label: string,
-                    position: number,
-                    disabled: bool,
-                    file: string.isRequired
-                  })
-                ),
-                description: string
-              }).isRequired,
-              addToCart: func.isRequired
+                )
             })
-          )
         })
-      }),
     };
 
     state = { quantity: 1 };
@@ -106,7 +105,7 @@ class ProductFullDetail extends Component {
             item: this.props.data.productDetail.items[0],
             quantity: this.state.quantity
         });
-    }
+    };
 
     render() {
         const { classes } = this.props;
@@ -165,4 +164,6 @@ class ProductFullDetail extends Component {
     }
 }
 
-export default classify(defaultClasses)(wrapQuery(ProductFullDetail, productDetailQuery ));
+export default classify(defaultClasses)(
+    wrapQuery(ProductFullDetail, productDetailQuery)
+);

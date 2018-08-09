@@ -33,14 +33,14 @@ const categoryQuery = gql`
 
 class Category extends Component {
     static propTypes = {
-      queryArgument: shape({
-        id: number
-      }),
-      classes: shape({
-        gallery: string,
-        root: string,
-        title: string
-      })
+        queryArgument: shape({
+            id: number
+        }),
+        classes: shape({
+            gallery: string,
+            root: string,
+            title: string
+        })
     };
 
     // TODO: Should not be a default here, we just don't have
@@ -53,22 +53,22 @@ class Category extends Component {
         const { data, classes } = this.props;
 
         return (
-          <article className={classes.root}>
-            <h1 className={classes.title}>
-              {/* TODO: Switch to RichContent component from Peregrine when merged */}
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: data.category.description
-                }}
-              />
-            </h1>
-            <section className={classes.gallery}>
-              <Gallery
-                data={data.category.products.items}
-                title={data.category.description}
-              />
-            </section>
-          </article>
+            <article className={classes.root}>
+                <h1 className={classes.title}>
+                    {/* TODO: Switch to RichContent component from Peregrine when merged */}
+                    <span
+                        dangerouslySetInnerHTML={{
+                            __html: data.category.description
+                        }}
+                    />
+                </h1>
+                <section className={classes.gallery}>
+                    <Gallery
+                        data={data.category.products.items}
+                        title={data.category.description}
+                    />
+                </section>
+            </article>
         );
     }
 }
