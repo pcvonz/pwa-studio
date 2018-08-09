@@ -1,16 +1,17 @@
 import React, { Component, createElement } from 'react';
 import { Query } from 'react-apollo';
 
-export default function wrapQuery(WrappedComponent, categoryQuery) {
+export default function wrapQuery(WrappedComponent, query) {
   return class QueryHOC extends Component {
     render() {
-      const { id, classes } = this.props;
+      const queryArguments = this.props;
+      const props = this.props;
       return (
-        <Query query={categoryQuery} variables={{ id }}>
+        <Query query={query} variables={{ ...queryArguments }}>
           {({ loading, error, data }) => {
             if (error) return <div>Data Fetch Error</div>;
             if (loading) return <p>Fetching data...</p>;
-            return ( <WrappedComponent data={data} classes={classes}></WrappedComponent>)
+            return ( <WrappedComponent {...props} data={data}></WrappedComponent>)
           }}
         </Query>
       )

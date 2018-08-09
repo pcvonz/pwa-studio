@@ -33,18 +33,20 @@ const categoryQuery = gql`
 
 class Category extends Component {
     static propTypes = {
-        id: number,
-        classes: shape({
-            gallery: string,
-            root: string,
-            title: string
-        })
+      queryArgument: shape({
+        id: number
+      }),
+      classes: shape({
+        gallery: string,
+        root: string,
+        title: string
+      })
     };
 
     // TODO: Should not be a default here, we just don't have
     // the wiring in place to map route info down the tree (yet)
     static defaultProps = {
-        id: 3
+        queryArgument: { id: 3 }
     };
 
     render() {
@@ -70,7 +72,5 @@ class Category extends Component {
         );
     }
 }
-
-
 
 export default classify(defaultClasses)(wrapQuery(Category, categoryQuery));

@@ -24,7 +24,9 @@ const categoryUrlSuffix = '.html';
 
 class CategoryList extends Component {
     static propTypes = {
-        id: number,
+      queryArgument: shape({
+        id: number
+      }),
         title: string,
         classes: shape({
             root: string,

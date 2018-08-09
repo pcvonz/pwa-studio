@@ -20,12 +20,10 @@ class Category extends Component {
 
         return (
           <Page>
-            <CategoryPageContent id={id} data={data} classes={classes}> </CategoryPageContent>
+            <CategoryPageContent queryArguments={{id: id}} data={data} classes={classes}> </CategoryPageContent>
           </Page>
         );
     }
 }
-
-
 
 export default classify(defaultClasses)(Category);

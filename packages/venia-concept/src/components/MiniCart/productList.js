@@ -27,6 +27,7 @@ class ProductList extends Component {
 
     render() {
         const { currencyCode, ...otherProps } = this.props;
+
         return (
             <List
                 render="ul"
