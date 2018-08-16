@@ -13,8 +13,8 @@ export default function bootstrap({ customRouter }) {
     if (process.env.NODE_ENV !== 'production' && this instanceof bootstrap) {
         throw new Error(
             'The API for Peregrine has changed. ' +
-                'Please see the Release Notes on Github ' +
-                'for instructions to update your application'
+            'Please see the Release Notes on Github ' +
+            'for instructions to update your application'
         );
     }
 

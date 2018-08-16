@@ -1,0 +1,1 @@
+{"version":1,"type":"window","query":"query products($search: String) {\n  products(search: $search) {\n    items {\n      id\n      name\n    }\n  }\n}\n","apiUrl":"https://magento-venia.local.pwadev:8001/graphql","variables":"{\"search\": \"joust\"}","subscriptionUrl":"","headers":[{"key":"","value":""},{"key":"","value":""},{"key":"","value":""}],"windowName":"Test"}
