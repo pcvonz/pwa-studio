@@ -7,7 +7,7 @@ import { ApolloProvider } from 'react-apollo';
 import Loader from 'src/components/Loader';
 import NotFound from 'src/components/NotFound';
 
-import reducer from 'src/reducers/app';
+import { Provider } from './store';
 import './index.css';
 
 const customRouterProps = {
@@ -47,5 +47,3 @@ if (process.env.SERVICE_WORKER && 'serviceWorker' in navigator) {
             });
     });
 }
-
-export { store };
