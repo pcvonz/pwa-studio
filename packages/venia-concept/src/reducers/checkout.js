@@ -1,70 +1,70 @@
-import { handleActions } from 'redux-actions';
-
-import actions from 'src/actions/checkout';
-
-export const name = 'checkout';
-
 const initialState = {
-    editing: null,
-    step: 'cart',
-    submitting: false
+    shippingInformation: false,
+    status: 'READY',
+    subflow: null
 };
 
-const reducerMap = {
-    [actions.begin]: state => {
-        return {
-            ...state,
-            editing: null,
-            step: 'form'
-        };
-    },
-    [actions.edit]: (state, { payload }) => {
-        return {
-            ...state,
-            editing: payload
-        };
-    },
-    [actions.input.submit]: state => {
-        return {
-            ...state,
-            submitting: true
-        };
-    },
-    [actions.input.accept]: state => {
-        return {
-            ...state,
-            editing: null,
-            step: 'form',
-            submitting: false
-        };
-    },
-    [actions.input.reject]: state => {
-        return {
-            ...state,
-            submitting: false
-        };
-    },
-    [actions.order.submit]: state => {
-        return {
-            ...state,
-            submitting: true
-        };
-    },
-    [actions.order.accept]: state => {
-        return {
-            ...state,
-            editing: null,
-            step: 'receipt',
-            submitting: false
-        };
-    },
-    [actions.order.reject]: state => {
-        return {
-            ...state,
-            submitting: false
-        };
-    },
-    [actions.reset]: () => initialState
+const reducer = (state = initialState, { payload, type }) => {
+    switch (type) {
+        case 'REQUEST_ORDER': {
+            return {
+                ...state,
+                status: 'REQUESTING'
+            };
+        }
+        case 'RECEIVE_ORDER': {
+            return {
+                ...state,
+                status: 'MODIFYING'
+            };
+        }
+        case 'ENTER_SUBFLOW': {
+            return {
+                ...state,
+                status: 'MODIFYING',
+                subflow: payload
+            };
+        }
+        case 'EXIT_SUBFLOW': {
+            return {
+                ...state,
+                status: 'MODIFYING',
+                subflow: null
+            };
+        }
+        case 'SUBMIT_SHIPPING_INFORMATION': {
+            return {
+                ...state,
+                shippingInformation: true
+            };
+        }
+        case 'SUBMIT_ORDER': {
+            return {
+                ...state,
+                status: 'SUBMITTING'
+            };
+        }
+        case 'REJECT_ORDER': {
+            return {
+                ...state,
+                status: 'MODIFYING'
+            };
+        }
+        case 'ACCEPT_ORDER': {
+            return {
+                ...state,
+                status: 'ACCEPTED'
+            };
+        }
+        case 'RESET_CHECKOUT': {
+            return initialState;
+        }
+        default: {
+            return state;
+        }
+    }
 };
 
-export default handleActions(reducerMap, initialState);
+const selectCheckoutState = ({ checkout }) => ({ checkout });
+
+export { reducer as default, selectCheckoutState };

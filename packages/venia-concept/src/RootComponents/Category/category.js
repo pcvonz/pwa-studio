@@ -18,7 +18,6 @@ const categoryQuery = gql`
                     id
                     name
                     small_image
-                    url_key
                     price {
                         regularPrice {
                             amount {
@@ -57,7 +56,7 @@ class Category extends Component {
                 <Query query={categoryQuery} variables={{ id }}>
                     {({ loading, error, data }) => {
                         if (error) return <div>Data Fetch Error</div>;
-                        if (loading) return <p> Fetching data </p>;
+                        if (loading) return <div>Fetching Data</div>;
 
                         return (
                             <article className={classes.root}>

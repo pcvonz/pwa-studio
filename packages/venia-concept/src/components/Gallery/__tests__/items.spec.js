@@ -39,7 +39,7 @@ test('emptyData contains only nulls', () => {
     expect(emptyData.every(v => v === null)).toBe(true);
 });
 
-test.skip('has initial state', () => {
+test('has initial state', () => {
     const wrapper = shallow(<Items items={[]} />);
 
     expect(wrapper.state('collection')).toMatchObject(
@@ -48,7 +48,7 @@ test.skip('has initial state', () => {
     expect(wrapper.state('done')).toBe(false);
 });
 
-test.skip('updates state after receiving props', () => {
+test('updates state after receiving props', () => {
     const wrapper = shallow(<Items items={[]} />);
     const prevCollection = wrapper.state('collection');
     const nextCollection = wrapper.setProps({ items: [] }).state('collection');
@@ -60,7 +60,7 @@ test.skip('updates state after receiving props', () => {
     expect(wrapper.state('done')).toBe(false);
 });
 
-test.skip('updates state after observer terminates', () => {
+test('updates state after observer terminates', () => {
     const wrapper = shallow(<Items items={items} />);
 
     items.forEach(() => {
@@ -71,7 +71,7 @@ test.skip('updates state after observer terminates', () => {
     expect(wrapper.state('done')).toBe(true);
 });
 
-test.skip('updates state even when handling errors', () => {
+test('updates state even when handling errors', () => {
     const wrapper = shallow(<Items items={items} />);
 
     items.forEach(() => {

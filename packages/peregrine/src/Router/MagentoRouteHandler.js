@@ -1,5 +1,5 @@
 import { createElement, Component } from 'react';
-import { string, shape, func } from 'prop-types';
+import { string, shape } from 'prop-types';
 import resolveUnknownRoute from './resolveUnknownRoute';
 import fetchRootComponent from './fetchRootComponent';
 
@@ -9,9 +9,7 @@ export default class MagentoRouteHandler extends Component {
         __tmp_webpack_public_path__: string.isRequired,
         location: shape({
             pathname: string.isRequired
-        }).isRequired,
-        CustomLoader: func,
-        NotFoundComponent: func
+        }).isRequired
     };
 
     state = {};
@@ -42,7 +40,7 @@ export default class MagentoRouteHandler extends Component {
                 if (!matched) {
                     // TODO: User-defined 404 page
                     // when the API work is done to support it
-                    this.setState({ notFound: true });
+                    throw new Error('404');
                 }
                 return fetchRootComponent(rootChunkID, rootModuleID).then(
                     Component => {
@@ -61,21 +59,13 @@ export default class MagentoRouteHandler extends Component {
     }
 
     render() {
-        const { CustomLoader, NotFoundComponent, location } = this.props;
+        this.props.customLoader;
+        const { location } = this.props;
         const routeInfo = this.state[location.pathname];
 
-        if (this.state.notFound) {
-            return this.props.NotFoundComponent ? (
-                <NotFoundComponent />
-            ) : (
-                <span> Could not find page </span>
-            );
-        } else if (!routeInfo) {
-            return this.props.CustomLoader ? (
-                <CustomLoader />
-            ) : (
-                <span> Loading...</span>
-            );
+        if (!routeInfo) {
+            // TODO (future iteration): User-defined loading content
+            return this.props.customLoader;
         }
 
         const { Component, ...routeProps } = routeInfo;

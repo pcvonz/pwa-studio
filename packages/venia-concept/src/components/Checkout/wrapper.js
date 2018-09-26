@@ -1,74 +1,61 @@
 import { Component, createElement } from 'react';
 import { connect } from 'react-redux';
-import { bool, func, object, oneOf, shape, string } from 'prop-types';
+import { bool, func, shape, string } from 'prop-types';
 
 import {
-    beginCheckout,
-    editOrder,
+    enterSubflow,
+    requestOrder,
     resetCheckout,
-    submitInput,
     submitOrder
 } from 'src/actions/checkout';
-import Flow from './flow';
+import CheckoutFlow from './flow';
 
-class Wrapper extends Component {
+const isReady = checkout => !!checkout.shippingInformation;
+
+class CheckoutWrapper extends Component {
     static propTypes = {
-        beginCheckout: func.isRequired,
-        cart: shape({
-            details: object,
-            guestCartId: string,
-            totals: object
-        }),
         checkout: shape({
-            editing: oneOf(['address', 'paymentMethod', 'shippingMethod']),
-            step: oneOf(['cart', 'form', 'receipt']).isRequired,
-            submitting: bool.isRequired
+            shippingInformation: bool,
+            status: string
         }),
-        editOrder: func.isRequired,
+        enterSubflow: func.isRequired,
+        requestOrder: func.isRequired,
         resetCheckout: func.isRequired,
-        submitInput: func.isRequired,
         submitOrder: func.isRequired
     };
 
     render() {
         const {
-            cart,
-            checkout,
-            beginCheckout,
-            editOrder,
+            checkout = {},
+            enterSubflow,
+            requestOrder,
             resetCheckout,
-            submitInput,
             submitOrder
         } = this.props;
 
-        // ensure state slices are present
-        if (!(cart && checkout)) {
-            return null;
-        }
-
-        const actions = {
-            beginCheckout,
-            editOrder,
+        const flowProps = {
+            enterSubflow,
+            ready: isReady(checkout),
+            requestOrder,
             resetCheckout,
-            submitInput,
+            status: checkout.status,
             submitOrder
         };
 
-        const flowProps = { actions, cart, checkout };
-
-        return <Flow {...flowProps} />;
+        return <CheckoutFlow {...flowProps} />;
     }
 }
 
+const mapStateToProps = ({ checkout }) => ({ checkout });
+
 const mapDispatchToProps = {
-    beginCheckout,
-    editOrder,
+    enterSubflow,
+    requestOrder,
     resetCheckout,
-    submitInput,
     submitOrder
 };
 
 export default connect(
-    ({ checkout }) => ({ checkout }),
+    mapStateToProps,
     mapDispatchToProps
-)(Wrapper);
+)(CheckoutWrapper);

@@ -37,17 +37,18 @@ module.exports = {
     },
     async create(commonName) {
         try {
-            const cert = await runAsRoot(
-                'Creating and trusting an SSL certificate for local dev requires temporary administrative privileges.\n Enter password for %u on %H: ',
-                /* istanbul ignore next: this runs out of band in another process, hard to test */
-                async name => {
-                    const devcert = require('@magento/devcert');
-                    const certs = await devcert(name);
-                    process.stdout.write(JSON.stringify(certs));
-                },
-                commonName
+            return JSON.parse(
+                await runAsRoot(
+                    'Creating and trusting an SSL certificate for local dev requires temporary administrative privileges.\n Enter password for %u on %H: ',
+                    /* istanbul ignore next: this runs out of band in another process, hard to test */
+                    async name => {
+                        const devcert = require('@magento/devcert');
+                        const certs = await devcert(name);
+                        process.stdout.write(JSON.stringify(certs));
+                    },
+                    commonName
+                )
             );
-            return JSON.parse(cert);
         } catch (e) {
             throw Error(
                 debug.errorMsg(

@@ -4,10 +4,10 @@ import { compose } from 'redux';
 import PropTypes from 'prop-types';
 
 import classify from 'src/classify';
-import { closeDrawer } from 'src/actions/app';
 import Main from 'src/components/Main';
 import MiniCart from 'src/components/MiniCart';
 import Navigation from 'src/components/Navigation';
+import { selectAppState } from 'src/reducers/app';
 import Mask from './mask';
 import defaultClasses from './page.css';
 
@@ -37,12 +37,14 @@ class Page extends Component {
     }
 }
 
-const mapDispatchToProps = { closeDrawer };
+const mapDispatchToProps = dispatch => ({
+    closeDrawer: () => dispatch({ type: 'TOGGLE_DRAWER', payload: null })
+});
 
 export default compose(
     classify(defaultClasses),
     connect(
-        ({ app }) => ({ app }),
+        selectAppState,
         mapDispatchToProps
     )
 )(Page);
