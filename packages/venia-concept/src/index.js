@@ -1,27 +1,10 @@
-import React, { createElement } from 'react';
+import { createElement } from 'react';
 import ReactDOM from 'react-dom';
-import bootstrap from '@magento/peregrine';
-import { MagentoRouter } from '@magento/peregrine';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
-import Loader from './RootComponents/Loader';
 
-import reducer from 'src/reducers/app';
+import { Provider } from 'src/store';
 import './index.css';
-
-const routerProps = {
-  apiBase: new URL('/graphql', location.origin).toString(),
-  __tmp_webpack_public_path__: __webpack_public_path__,
-  customLoader: <Loader />
-};
-
-const customRouter = <MagentoRouter {...routerProps} />;
-
-const { Provider, store } = bootstrap({
-  customRouter: customRouter
-});
-
-store.addReducer('app', reducer);
 
 const apolloClient = new ApolloClient();
 
@@ -44,5 +27,3 @@ if (process.env.SERVICE_WORKER && 'serviceWorker' in navigator) {
             });
     });
 }
-
-export { store };

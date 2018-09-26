@@ -1,12 +1,13 @@
 import { Component, createElement } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import classify from 'src/classify';
 import Icon from 'src/components/Icon';
 import CartTrigger from './cartTrigger';
 import NavTrigger from './navTrigger';
 import defaultClasses from './header.css';
-import logo from './logo.svg';
+import logo from 'src/shared/logo.svg';
 
 class Header extends Component {
     static propTypes = {
@@ -28,13 +29,15 @@ class Header extends Component {
         return (
             <header className={classes.root}>
                 <div className={classes.toolbar}>
-                    <img
-                        className={classes.logo}
-                        src={logo}
-                        height="24"
-                        alt="Venia"
-                        title="Venia"
-                    />
+                    <Link to="/">
+                        <img
+                            className={classes.logo}
+                            src={logo}
+                            height="24"
+                            alt="Venia"
+                            title="Venia"
+                        />
+                    </Link>
                     <div className={classes.primaryActions}>
                         <NavTrigger>
                             <Icon name="menu" />
